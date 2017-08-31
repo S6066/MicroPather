@@ -8,9 +8,12 @@ else
     platformData = {"x86", "x64"}
 end
 
+local root = "../"
+
 workspace "MicroPather"
     configurations { "DebugDynamic", "ReleaseDynamic", "DebugStatic", "ReleaseStatic" }
     platforms(platformData)
+    location("solution/" .. _ACTION)
 
     filter "platforms:x86"
         architecture "x32"
@@ -23,7 +26,7 @@ workspace "MicroPather"
 project "MicroPather"
     language "C++"
     targetname "micropather"
-    files { "micropather.h", "micropather.cpp" }
+    files { root .. "micropather.h", root .. "micropather.cpp" }
 
 	filter "configurations:*Static"
     	kind "StaticLib"
@@ -37,3 +40,32 @@ project "MicroPather"
 
     filter "configurations:Release*"
         optimize "On"
+
+project "Dungeon Demo"
+    language "C++"
+    targetname "dungeon"
+    files { root .. "dungeon.cpp" }
+    kind "ConsoleApp"
+    dependson { "MicroPather" }
+
+    filter "configurations:Debug*"
+        symbols "On"
+        targetsuffix "-d"
+
+    filter "configurations:Release*"
+        optimize "On"
+
+project "Speed Test"
+    language "C++"
+    targetname "speed"
+    files { root .. "speed.cpp" }
+    kind "ConsoleApp"
+    dependson { "MicroPather" }
+
+    filter "configurations:Debug*"
+        symbols "On"
+        targetsuffix "-d"
+
+    filter "configurations:Release*"
+        optimize "On"
+
